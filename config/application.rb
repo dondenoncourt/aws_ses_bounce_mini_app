@@ -19,5 +19,11 @@ module AwsSesSample
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    config.action_mailer.delivery_method = :ses
+    config.action_mailer.default_url_options = { host: 'fast-cove-3541.herokuapp.com' }
+    config.email_from_address = 'dondenoncourt@gmail.com'
+    config.email_support_address = 'dondenoncourt@gmail.com'
+    config.email_interceptor_to_address = 'dondenoncourt@gmail.com'
+    config.intercept_emails = true
   end
 end
