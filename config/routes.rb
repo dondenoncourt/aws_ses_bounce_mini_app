@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
   get 'mail_it' => 'simple_mail#mail_it'
   post 'aws_sns/bounce' => 'simple_mail#bounce'
+  post 'aws_sns/complaint' => 'simple_mail#complaint'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
