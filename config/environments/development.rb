@@ -7,6 +7,17 @@ Rails.application.configure do
   config.cache_classes = false
 
   config.action_mailer.delivery_method = :ses
+  config.action_mailer.default_url_options = { host: 'fast-cove-3541.herokuapp.com' }
+  config.email_from_address = 'dondenoncourt@gmail.com'
+  config.email_support_address = 'dondenoncourt@gmail.com'
+  config.email_interceptor_to_address = 'dondenoncourt@gmail.com'
+  config.intercept_emails = true
+  #config.action_mailer.default_url_options = { host: ENV['HOST_URL'] }
+  #config.email_from_address = ENV['EMAIL_FROM_ADDRESS']
+  #config.email_support_address = ENV['EMAIL_SUPPORT_ADDRESS'] || 'support@archemedx.com'
+  #config.email_interceptor_to_address = ENV['EMAIL_INTERCEPTOR_TO_ADDRESS'] # for dev only... defaults to testmail@archemedx.com
+  #config.intercept_emails = true
+
 
   # Do not eager load code on boot.
   config.eager_load = false
