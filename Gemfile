@@ -40,3 +40,11 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 gem 'rails_12factor', group: :production
+gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
+
+group :development do
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'pry-byebug'
+end
+
