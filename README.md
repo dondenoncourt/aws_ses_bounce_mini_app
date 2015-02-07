@@ -157,8 +157,20 @@ From my app I used:
 https://fast-cove-3541.herokuapp.com/mail_it?email=bounce@simulator.amazonses.com
 The simple_mail_controller#bounce method handled that bounce my emailing me with the JSON string in the email:
 
-```JSON
-{"notificationType"=>"Bounce", "bounce"=>{"bounceSubType"=>"General", "bounceType"=>"Permanent", "bouncedRecipients"=>[{"emailAddress"=>"bounce@simulator.amazonses.com", "status"=>"5.1.1", "action"=>"failed", "diagnosticCode"=>"smtp; 550 5.1.1 user unknown"}], "reportingMTA"=>"dsn; a8-34.smtp-out.amazonses.com", "timestamp"=>"2015-02-07T17:40:39.338Z", "feedbackId"=>"0000014b65210ac9-b9f36242-8ade-413e-8597-1112a631244f-000000"}, "mail"=>{"timestamp"=>"2015-02-07T17:40:38.000Z", "source"=>"dondenoncourt@gmail.com", "destination"=>["bounce@simulator.amazonses.com"], "messageId"=>"0000014b652108a4-38938047-2f1b-4d2b-a1ca-28b58ed6fdd5-000000"}}
+```json
+{"notificationType"=>"Bounce", "bounce"=>
+{"bounceSubType"=>"General", "bounceType"=>"Permanent",
+"bouncedRecipients"=>
+[{"emailAddress"=>"bounce@simulator.amazonses.com", 
+  "status"=>"5.1.1", 
+  "action"=>"failed", 
+  "diagnosticCode"=>"smtp; 550 5.1.1 user unknown"
+}], 
+"reportingMTA"=>"dsn; a8-34.smtp-out.amazonses.com", "timestamp"=>"2015-02-07T17:40:39.338Z",
+ "feedbackId"=>"0000014b65210ac9-b9f36242-8ade-413e-8597-1112a631244f-000000"}, "mail"=>{"timestamp"=>"2015-02-07T17:40:38.000Z", 
+"source"=>"dondenoncourt@gmail.com", 
+"destination"=>["bounce@simulator.amazonses.com"],
+ "messageId"=>"0000014b652108a4-38938047-2f1b-4d2b-a1ca-28b58ed6fdd5-000000"}}
 ```
 
 The JSON contains an array of bouncedReceipts. My bounce methods did really “handle” the bounce in any other way than to log the email addresses. Your application would, undoubtedly, do something a bit more useful. 
