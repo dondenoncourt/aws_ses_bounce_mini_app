@@ -76,8 +76,31 @@ Note that I put my AWS-SES Mini-App on Heroku mostly because AWS-SES callback ne
 ## Configure Verified Senders
 
 When your application is ready to respond to AWS-SES callbacks, it’s then time to configure AWS-SES. 
+The first step is to add and verify sender email addresses. From the AWS menu, select Services and click on SES. 
 
-From the AWS menu, select Services and click on SES.
+![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
+
+Then, on the left panel of the SES page, click on the Email Addresses link and, in the center panel, click on the Verify a New Email Address button. Enter the address and click the Verify This Email Address button.
+![Alt text](/public/images/ses_verify_email.png?raw=true)
+
+
+The following popup will be displayed:
+
+![Alt text](/public/images/ses_verify_email_pending.png?raw=true)
+
+Note, in the background, in a highlighted color, that the Status of the email address is “pending verification.”
+
+An email will be sent to that address with the subject of “Amazon SES Address Verification Request.” The body of that email will say: 
+
+“Dear Amazon Simple Email Service Customer,
+
+We have received a request to authorize this email address for use with Amazon SES in region US East (N. Virginia). If you requested this verification, please go to the following URL to confirm that you are authorized to use this email address:”
+
+After you click that link the status of the Verified Sender:Email will go to verified.
+
+## Add the Bounce Topic
+
+With the email addresses verified, the next step is to create a bounce topic. From the AWS menu, select Services and click on SES.
 
 ![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
 
@@ -150,4 +173,3 @@ The JSON contains an array of bouncedReceipts. My bounce method did not really �
 Amazon lists the JSON structure for bounce notifications at http://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html. You probably will want to look at the bounce types and process their handling accordingly. 
 
 In a production application, I coded RSpec bounce handling tests with JSON built from the AWS samples.
-
