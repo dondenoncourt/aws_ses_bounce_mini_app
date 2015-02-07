@@ -11,6 +11,8 @@ a real chicken or the egg.
 * verify email addresses first
 ** Services drop-down menu click on SES, under Verified Senders in the left panel, Click on Email Addresses link, Click on Verify a New Email Address button 
 ![Alt text](public/images/ses_verify_email.png)
+{rdoc-image:http://example/image}[http://example/]
+![Alt text](/public/images/ses_verify_email.png?raw=true "Optional Title")
 then shows [ses_verify_email_pending.png]
 ** the email addressee will receive an email with:
 *** Subject: Amazon SES Address Verification Request
