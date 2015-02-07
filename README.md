@@ -177,8 +177,9 @@ Click on the
 
 
 
+![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
 
-aws_services_pick_sns.png
+.png
 
 
 
