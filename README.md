@@ -40,50 +40,6 @@ Things you may want to cover:
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
 
-
-```ruby
-class SimpleMailController < ApplicationController
-  skip_before_filter :verify_authenticity_token # so AWS callbacks are accepted
-
-  def mail_it
-    logger.info "mail_it called with #{params}"
-    @email = params[:email]
-    SimpleMailer.mail_it(@email, 'original text').deliver
-    render text: 'mail sent'
-  end
-
-  def bounce
-    json = JSON.parse(request.raw_post)
-    logger.info "bounce callback from AWS with #{json}"
-    aws_needs_url_confirmed = json['SubscribeURL']
-    if aws_needs_url_confirmed
-      logger.info "AWS is requesting confirmation of the bounce handler URL"
-      uri = URI.parse(aws_needs_url_confirmed)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.get(uri.request_uri)
-    else
-      logger.info "AWS has sent us the following bounce notification(s): #{json}"
-      SimpleMailer.mail_it('dondenoncourt@gmail.com', json).deliver
-      json['bounce']['bouncedRecipients'].each do |recipient|
-        logger.info "AWS SES received a bounce on an email send attempt to #{recipient['emailAddress']}"
-      end
-    end
-    render nothing: true, status: 200
-  end
-
-end
-```
-
-The if AWS needs URL confirmed block of the bounce method executes when
-AWS-SES attempts a confirmation. That bounce method was
-
-When an actual callback occurs. 
-
-
-
-
 As promised in my last blog entry, this my first in a series of instructive Rails mini-apps. The purpose of each application will be to illustrate the use of one technique, feature, or utility. And the README with that application will be provide instructive details (https://github.com/dondenoncourt/aws_ses_bounce_mini_app).
 
 Recently I had to code a Rails application to handle bounce notifications from AWS SES. Amazon Simple Email Server is ridiculously easy to configure and use in a Rails application. As the instructions at the github gem page, https://github.com/drewblas/aws-ses, tell you, just add the aws-ses Rails gem and create a configuration file called config/initializers/amazon_ses.rb that contains your Amazon credentials. 
@@ -146,6 +102,16 @@ The controller’s mail_it method is self-explanatory. It take a url like:
 /mail_it?email=dondenoncourt@gmail.com
 and send an email to the specified address. It is the bounce action that need a bit of explanation. As I mentioned earlier, to make AWS-SES configuration simple, your application should be configured to respond to an AWS-SES bounce callback confirmation request. Let me explain: When you configure AWS-SES bounces, you provide AWS the URL of your application. AWS will put that bounce configuration in a pending status until it is able to send a confirmation request to your application and gets a positive response. 
 
+= Configure Verified Senders
+
+From the AWS menu, select Services and click on SES.
+
+![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
+
+Then, on the left panel, click on Email Addresses under Verified Senders.
+
+
+
 configure emails
 sns
 
@@ -164,23 +130,42 @@ You will see a pop panel that says:
 Click the Close button on that popup and note the SubscriptionId column says “PendingConfirmation.” Click refresh and, if your application was available to response to the URL specified in the endpoint, the SubscriptionId should be set to a value like:
 
 arn:aws:sns:us-east-1:294894041652:bounce:30e9ca4b-0723-4078-86a5-0d1d2573d101
+To get a simple JSON string I (and with the format I coded for in SimpleMailController)  changed the raw type. Click on the Subscriptions link in the left panel, then click the checkbox of your bounce topic in the center panel, and, in the popup, click Raw Message Delivery True, and click the Set Subscription Attributes button.
+
+![Alt text](/public/images/sns_msg_format_raw.png?raw=true)
+
 
 Next you need to assign that SNS topic to your SES Verified Senders. 
 
-Click on the 
+From the AWS menu, select Services and click on SES. Then, on the left panel, click on Email Addresses under Verified Senders. You had previously entered an email address here but, this time, we need to specify that emails sent through the Verified Senders will have bounce processing enabled.
+
+![Alt text](/public/images/ses_verify_email_addr.png?raw=true)
+
+Then click on the Verified Sender that you use as your application’s from address, expand the Notifications twirly, click on the Edit Configuration button, and, in the select box for Bounces, pick the ‘bounce’ topic you created earlier. And click the Save Config button.
+
+![Alt text](/public/images/ses_notification_topic_selection.png?raw=true)
+
+Note that you can configure bounce notifications by domain as well as sender email address. Also note that, after a successful bounce notification configuration, AWS post to your bounce handler an “AmazonSnsSubscriptionSucceeded” bounce notification.
 
 
+= Test Bouncing
 
+The free and default  version of AWS SES only lets you mail to verified address. So it is a bit of a problem to test bounces. But AWS has a set of test email addresses you can use (http://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html)
 
+From my app I used:
 
+https://fast-cove-3541.herokuapp.com/mail_it?email=bounce@simulator.amazonses.com
+The simple_mail_controller#bounce method handled that bounce my emailing me with the JSON string in the email:
 
+```JSON
+{"notificationType"=>"Bounce", "bounce"=>{"bounceSubType"=>"General", "bounceType"=>"Permanent", "bouncedRecipients"=>[{"emailAddress"=>"bounce@simulator.amazonses.com", "status"=>"5.1.1", "action"=>"failed", "diagnosticCode"=>"smtp; 550 5.1.1 user unknown"}], "reportingMTA"=>"dsn; a8-34.smtp-out.amazonses.com", "timestamp"=>"2015-02-07T17:40:39.338Z", "feedbackId"=>"0000014b65210ac9-b9f36242-8ade-413e-8597-1112a631244f-000000"}, "mail"=>{"timestamp"=>"2015-02-07T17:40:38.000Z", "source"=>"dondenoncourt@gmail.com", "destination"=>["bounce@simulator.amazonses.com"], "messageId"=>"0000014b652108a4-38938047-2f1b-4d2b-a1ca-28b58ed6fdd5-000000"}}
+```
 
+The JSON contains an array of bouncedReceipts. My bounce methods did really “handle” the bounce in any other way than to log the email addresses. Your application would, undoubtedly, do something a bit more useful. 
 
+Amazon lists the JSON structure for bounce notifications at http://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html.
 
-![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
-
-.png
-
+In a production application, I coded RSpec bounce handling tests with JSON built from the AWS samples.
 
 
 
