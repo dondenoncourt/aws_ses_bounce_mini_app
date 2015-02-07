@@ -77,3 +77,9 @@ class SimpleMailController < ApplicationController
 
 end
 ```
+
+The section:
+```ruby
+    aws_needs_url_confirmed = json['SubscribeURL']
+    if aws_needs_url_confirmed```
+
