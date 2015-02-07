@@ -43,7 +43,7 @@ Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
 
 
-```
+```ruby
 class SimpleMailController < ApplicationController
   skip_before_filter :verify_authenticity_token # so AWS callbacks are accepted
 
