@@ -18,13 +18,12 @@ class SimpleMailController < ApplicationController
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      response = http.get(uri.request_uri)
-      puts "could not confirm aws sns subscription url from: #{@data}" unless response.code.to_s == '200'
+      http.get(uri.request_uri)
     else
-      logger.info "AWS has sent us a bounce notification: #{json}"
+      logger.info "AWS has sent us the following bounce notification(s): #{json}"
       SimpleMailer.mail_it('dondenoncourt@gmail.com', json).deliver
       json['bounce']['bouncedRecipients'].each do |recipient|
-        logger.info "bounce on send to #{recipient['emailAddress']}"
+        logger.info "AWS SES received a bounce on an email send attempt to #{recipient['emailAddress']}"
       end
     end
     render nothing: true, status: 200
