@@ -1,26 +1,26 @@
 # AWS SES Mini-App with Bounce Notification Handling 
 
-As promised in my last blog entry on http://denoncourt.blogspot.com, this my first in a series of instructive Rails mini-apps. The purpose of each application will be to illustrate the use of one technique, feature, or utility. And the README of that application will be provide instructive details (https://github.com/dondenoncourt/aws_ses_bounce_mini_app).
+As promised in my last blog entry on http://denoncourt.blogspot.com, this my first in a series of instructive Rails mini-apps. The purpose of each application will be to illustrate the use of one technique, feature, or utility. And the README of that application will provide instructive details (https://github.com/dondenoncourt/aws_ses_bounce_mini_app).
 
 Recently I had to code a Rails application to handle bounce notifications from AWS SES. Amazon Simple Email Server is ridiculously easy to configure and use in a Rails application. As the instructions at the github gem page, https://github.com/drewblas/aws-ses, explain, all you need do is add the aws-ses Rails gem and create a configuration file called config/initializers/amazon_ses.rb that contains your Amazon credentials (soft-coded of course.)
 
-But, if you need your application to handle bounce notifications, things get a little more complicated. It took me a bit to figure out how to properly configure AWS-SES bounce notifications and to write the code required to handle AWS callbacks. So I figured it would be helpful if I built a mini-app with a README that details the process.
+But, if you need your application to handle bounce, complaint, or delivery notifications, things get a little more complicated. It took me a bit to figure out how to properly configure AWS-SES bounce notifications and to write the code required to handle AWS callbacks. So I figured it would be helpful if I built a mini-app with a README that details the process.
 
 ## Bounce Notification Flow
 
 Let me walk through the two-step flow of bounce notifications:
 
-First, your Rails mailer sends an email and, subsequently, AWS-SES fails to be able to deliver that email -- perhaps because the email address was incorrect, or maybe the mailbox was full, or it could have failed for a couple of other reasons that are covered in http://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html#bounce-types.
+First: your Rails mailer sends an email and, subsequently, AWS-SES fails to be able to deliver that email -- perhaps because the email address was incorrect, or maybe the mailbox was full, or it could have failed for a couple of other reasons that are covered in http://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html#bounce-types.
 
-Second, because you have configured AWS-SES to perform callbacks to your application when bounces occur, AWS-SES sends a POST to your application with a JSON string that contains an array of bounced email addresses.
+Second: because you have configured AWS-SES to perform callbacks to your application when bounces occur, AWS-SES sends a POST to your application with a JSON payload that contains an array of bounced email addresses.
 
 ## Handling AWS SES Callback Confirmation HTTP Post Request
 
-The first part of that second step, configuring AWS-SES bounce callbacks, is easier said than done. The AWS configuration screens are confusing and, to make things easy, your application should be coded to handle notifications before you do the AWS-SES configuration. 
+The first part of that second step, configuring AWS-SES bounce callbacks, is easier said than done. The AWS configuration screens are confusing and, as I found out the hard way, to make things easy, your application should be coded to handle notifications before you do the AWS-SES configuration. 
 
 ## Mini-App’s AWS-SES Bounce Confirmation Handling
 
-The mini-app’s routes.rb includes the following:
+My mini-app’s routes.rb includes the following:
 ```ruby
   get 'mail_it' => 'simple_mail#mail_it'
   post 'aws_sns/bounce' => 'simple_mail#bounce'
@@ -67,11 +67,11 @@ The controller’s mail_it method is self-explanatory. It take a url like:
 
 `/mail_it?email=dondenoncourt@gmail.com`
 
-and responds by sending an email to the specified address. It is the bounce method that needs a bit of explanation. As I mentioned earlier, to make AWS-SES configuration simple, your application should be coded to respond to an AWS-SES bounce callback confirmation request before configuring AWS-SES. Let me explain: When you configure AWS-SES bounces, you provide AWS the URL of your application. AWS will put that bounce configuration in a pending status until it is able to send a confirmation request to your application and gets a positive response. Anyway, I recommend that you add the route and the controller action so a POST HTTP request to your app is ready before you configure AWS-SES.
+and responds by sending an email to the specified address. It is the bounce method that needs a bit of explanation. As I mentioned earlier, to make AWS-SES configuration simple, your application should be coded to respond to an AWS-SES bounce callback confirmation request before configuring AWS-SES. Let me explain: When you configure AWS-SES bounces, you provide AWS the URL of your application. AWS will put that bounce configuration in a pending status until it is able to send a confirmation request to your application and gets a positive response. Anyway, I recommend that you add the route and the controller action and have the app running so it is ready to handle the AWS POST HTTP request before you configure AWS-SES.
 
 ## Heroku
 
-Note that I put my AWS-SES Mini-App on Heroku mostly because AWS-SES callback needs to have a URL to an addressable server. My good old localhost:3000 wouldn’t work. 
+Note that I put my AWS-SES Mini-App on Heroku mostly because AWS-SES callback needs to have a URL to an addressable server. My good old localhost:3000 wouldn’t work without doing some router configuration that I wasn’t willing to do.
 
 ## Configure Verified Senders
 
