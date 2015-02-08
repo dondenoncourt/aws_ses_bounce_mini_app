@@ -81,6 +81,7 @@ The first step is to add and verify sender email addresses. From the AWS menu, s
 ![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
 
 Then, on the left panel of the SES page, click on the Email Addresses link and, in the center panel, click on the Verify a New Email Address button. Enter the address and click the Verify This Email Address button.
+
 ![Alt text](/public/images/ses_verify_email.png?raw=true)
 
 
@@ -100,11 +101,9 @@ After you click that link the status of the Verified Sender:Email will go to ver
 
 ## Add the Bounce Topic
 
-With the email addresses verified, the next step is to create a bounce topic. From the AWS menu, select Services and click on SES.
+With the email addresses verified, the next step is to create a bounce topic. From the AWS menu, select Services and click on SNS.
 
 ![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
-
-Then, on the left panel, click on Email Addresses under Verified Senders.
 
 Click the SNS Dashboard link on the left panel and then click the Create New Topic button in the center panel. Enter Topic and Display Names of “bounce” and then click the Create Topic button.
 
@@ -144,11 +143,12 @@ Note that you can configure bounce notifications by domain as well as sender ema
 
 ## Test Bouncing
 
-The free and default  version of AWS SES only lets you mail to verified address. So it is a bit of a problem to test bounces. But AWS provides a set of test email addresses you can use: (http://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html)
+The free and default  version of AWS SES only lets you mail to verified address. So it is a bit of a problem to test bounces. No problem, though, as AWS provides a set of test email addresses you can use: (http://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html)
 
 That list contains an email that you can use to tests your bounce code. From my app I used:
 
 https://fast-cove-3541.herokuapp.com/mail_it?email=bounce@simulator.amazonses.com
+
 The simple_mail_controller#bounce method handled that bounce by sending myself an email the body of which contains the following ASW-SNS bounce JSON string:
 
 ```JSON
