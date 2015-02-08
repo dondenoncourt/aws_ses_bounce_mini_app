@@ -92,9 +92,9 @@ Note, in the background, in a highlighted color, that the Status of the email ad
 
 An email will be sent to that address with the subject of “Amazon SES Address Verification Request.” The body of that email will say: 
 
-“Dear Amazon Simple Email Service Customer,
+*Dear Amazon Simple Email Service Customer,*
 
-We have received a request to authorize this email address for use with Amazon SES in region US East (N. Virginia). If you requested this verification, please go to the following URL to confirm that you are authorized to use this email address:”
+*We have received a request to authorize this email address for use with Amazon SES in region US East (N. Virginia). If you requested this verification, please go to the following URL to confirm that you are authorized to use this email address:*
 
 After you click that link the status of the Verified Sender:Email will go to verified.
 
