@@ -67,11 +67,11 @@ The controller’s mail_it method is self-explanatory. It take a url like:
 
 `/mail_it?email=dondenoncourt@gmail.com`
 
-and responds by sending an email to the specified address. It is the bounce method that needs a bit of explanation. As I mentioned earlier, to make AWS-SES configuration simple, your application should be coded to respond to an AWS-SES bounce callback confirmation request before configuring AWS-SES. Let me explain: When you configure AWS-SES bounces, you provide AWS the URL of your application. AWS will put that bounce configuration in a pending status until it is able to send a confirmation request to your application and gets a positive response. Anyway, I recommend that you add the route and the controller action and have the app running so it is ready to handle the AWS POST HTTP request before you configure AWS-SES.
+and responds by sending an email to the specified address. It is the bounce method that needs a bit of explanation. As I mentioned earlier, to make AWS-SES configuration simple, your application should be coded to respond to an AWS-SES bounce callback confirmation request before configuring AWS-SES. Let me explain: When you configure AWS-SES bounces, you provide AWS the URL of your application. AWS will put that bounce configuration in a pending status until it is able to send a confirmation request to your application and gets a positive response. Anyway, I recommend that you add the route and the controller action and have the app running so it is ready to handle the AWS POST HTTP request -- before you configure AWS-SES.
 
 ## Heroku
 
-Note that I put my AWS-SES Mini-App on Heroku mostly because AWS-SES callback needs to have a URL to an addressable server. My good old localhost:3000 wouldn’t work without doing some router configuration that I wasn’t willing to do.
+Note that I put my AWS-SES Mini-App on Heroku mostly because AWS-SES callback needs to be able to POST to the URL of an addressable server. My good old localhost:3000 wouldn’t work without doing some router configuration that I wasn’t willing to do.
 
 ## Configure Verified Senders
 
@@ -173,3 +173,4 @@ The JSON contains an array of bouncedReceipts. My bounce method did not really �
 Amazon lists the JSON structure for bounce notifications at http://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html. You probably will want to look at the bounce types and process their handling accordingly. 
 
 In a production application, I coded RSpec bounce handling tests with JSON built from the AWS samples.
+
