@@ -76,14 +76,9 @@ Note that I put my AWS-SES Mini-App on Heroku mostly because AWS-SES callback ne
 ## Configure Verified Senders
 
 When your application is ready to respond to AWS-SES callbacks, it’s then time to configure AWS-SES. 
-The first step is to add and verify sender email addresses. From the AWS menu, select Services and click on SES. 
-
-![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
-
-Then, on the left panel of the SES page, click on the Email Addresses link and, in the center panel, click on the Verify a New Email Address button. Enter the address and click the Verify This Email Address button.
+The first step is to add and verify sender email addresses. From AWS SES [home page](https://console.aws.amazon.com/ses/home), on the left panel of the SES page, click on the Email Addresses link and, in the center panel, click on the Verify a New Email Address button. Enter the address and click the Verify This Email Address button.
 
 ![Alt text](/public/images/ses_verify_email.png?raw=true)
-
 
 The following popup will be displayed:
 
@@ -101,11 +96,7 @@ After you click that link the status of the Verified Sender:Email will go to ver
 
 ## Add the Bounce Topic
 
-With the email addresses verified, the next step is to create a bounce topic. From the AWS menu, select Services and click on SNS.
-
-![Alt text](/public/images/aws_services_pick_sns.png?raw=true)
-
-Click the SNS Dashboard link on the left panel and then click the Create New Topic button in the center panel. Enter Topic and Display Names of “bounce” and then click the Create Topic button.
+With the email addresses verified, the next step is to create a bounce topic. From the [AWS SNS home page](https://console.aws.amazon.com/sns/v2/home?region=us-east-1#/home), click the Create New Topic button in the center panel. Enter Topic and Display Names of “bounce” and then click the Create Topic button.
 
 ![Alt text](/public/images/sns_create_bounce_topic.png?raw=true)
 
