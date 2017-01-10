@@ -21,7 +21,7 @@ class SimpleMailController < ApplicationController
       http.get(uri.request_uri)
     else
       logger.info "AWS has sent us the following bounce notification(s): #{json}"
-      SimpleMailer.mail_it('dondenoncourt@gmail.com', json).deliver
+      SimpleMailer.mail_it('don@corgibytes.com', json).deliver
       json['bounce']['bouncedRecipients'].each do |recipient|
         logger.info "AWS SES received a bounce on an email send attempt to #{recipient['emailAddress']}"
       end

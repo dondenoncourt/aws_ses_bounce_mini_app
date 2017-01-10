@@ -52,7 +52,7 @@ class SimpleMailController < ApplicationController
       http.get(uri.request_uri)
     else
       logger.info "AWS has sent us the following bounce notification(s): #{json}"
-      SimpleMailer.mail_it('dondenoncourt@gmail.com', json).deliver
+      SimpleMailer.mail_it('don@corgibytes.com', json).deliver
       json['bounce']['bouncedRecipients'].each do |recipient|
         logger.info "AWS SES received a bounce on an email send attempt to #{recipient['emailAddress']}"
       end
@@ -65,7 +65,7 @@ end
 
 The controller’s mail_it method is self-explanatory. It take a url like: 
 
-`/mail_it?email=dondenoncourt@gmail.com`
+`/mail_it?email=don@corgibytes.com`
 
 and responds by sending an email to the specified address. It is the bounce method that needs a bit of explanation. As I mentioned earlier, to make AWS-SES configuration simple, your application should be coded to respond to an AWS-SES bounce callback confirmation request before configuring AWS-SES. Let me explain: When you configure AWS-SES bounces, you provide AWS the URL of your application. AWS will put that bounce configuration in a pending status until it is able to send a confirmation request to your application and gets a positive response. Anyway, I recommend that you add the route and the controller action and have the app running so it is ready to handle the AWS POST HTTP request -- before you configure AWS-SES.
 
@@ -154,7 +154,7 @@ The simple_mail_controller#bounce method handled that bounce by sending myself a
  }], 
 "reportingMTA"=>"dsn; a8-34.smtp-out.amazonses.com", "timestamp"=>"2015-02-07T17:40:39.338Z",
  "feedbackId"=>"0000014b65210ac9-b9f36242-8ade-413e-8597-1112a631244f-000000"}, "mail"=>{"timestamp"=>"2015-02-07T17:40:38.000Z", 
-"source"=>"dondenoncourt@gmail.com", 
+"source"=>"don@corgibytes.com", 
 "destination"=>["bounce@simulator.amazonses.com"],
  "messageId"=>"0000014b652108a4-38938047-2f1b-4d2b-a1ca-28b58ed6fdd5-000000"}}
 ```

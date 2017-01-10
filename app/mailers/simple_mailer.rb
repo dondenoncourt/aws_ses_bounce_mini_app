@@ -1,5 +1,5 @@
 class SimpleMailer < ActionMailer::Base
-  default from: "dondenoncourt@gmail.com"
+  default from: "don@corgibytes.com"
   def mail_it(email, body_text)
     @email = email
     @body_text = body_text
