@@ -76,7 +76,7 @@ Note that I put my AWS-SES Mini-App on Heroku mostly because AWS-SES callback ne
 ## Configure Verified Senders
 
 When your application is ready to respond to AWS-SES callbacks, it’s then time to configure AWS-SES. 
-The first step is to add and verify sender email addresses. From AWS SES [home page](https://console.aws.amazon.com/ses/home), on the left panel of the SES page, click on the Email Addresses link and, in the center panel, click on the Verify a New Email Address button. Enter the address and click the Verify This Email Address button.
+The first step is to add and verify sender email addresses. From AWS SES [home page](https://console.aws.amazon.com/ses/home), on the left panel, click on the Email Addresses link and, in the center panel, click on the Verify a New Email Address button. Enter the address and click the Verify This Email Address button.
 
 ![Alt text](/public/images/ses_verify_email.png?raw=true)
 
@@ -92,19 +92,18 @@ An email will be sent to that address with the subject of “Amazon SES Address 
 
 *We have received a request to authorize this email address for use with Amazon SES in region US East (N. Virginia). If you requested this verification, please go to the following URL to confirm that you are authorized to use this email address:*
 
-After you click that link the status of the Verified Sender:Email will go to verified.
+After you click that link the status of the Verified Sender:Email will go to `verified` after you've refreshed the verify email address page.
 
 ## Add the Bounce Topic
 
-With the email addresses verified, the next step is to create a bounce topic. From the [AWS SNS home page](https://console.aws.amazon.com/sns/v2/home?region=us-east-1#/home), click the Create New Topic button in the center panel. Enter Topic and Display Names of “bounce” and then click the Create Topic button.
+With the email addresses verified, the next step is to create a bounce topic. From the [AWS SNS home page](https://console.aws.amazon.com/sns/v2/home?region=us-east-1#/home), click the Create Topic button in the center panel. Enter Topic and Display Names of “bounce” and then click the Create Topic button.
 
 ![Alt text](/public/images/sns_create_bounce_topic.png?raw=true)
 
-In the subsequent panel
+In the page labeled `Topic details: bounces` click the `Create subscription` button and, in the `Create subscription` popup change the protocol to https and key an endpoint name that matches your application’s bounce route and click the `Create subscribe` button.
 ![Alt text](/public/images/sns_subscription_create_bounce.png?raw=true)
-Click the Create Subscription button and key an endpoint name that matches your application’s bounce route and click the Subscribe button.
 
-You will see a pop panel that says:
+Back on the `Topic details: bounces` page, refresh and the page Subscription ID column will go from `Pending` to the Topic ARN. Click the check box beside that Subscription ID and click the `Confirm subscription` button.
 
 “Subscription request received!  A confirmation message will be sent to the subscribed endpoint. Once the subscription has been confirmed, the endpoint will receive notifications from this topic.  Subscriptions will expire after 3 days if not confirmed.”
 
