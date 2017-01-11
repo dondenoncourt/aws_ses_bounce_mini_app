@@ -113,15 +113,25 @@ Click the Close button on that popup and note the SubscriptionId column on the p
 
 **arn:aws:sns:us-east-1:294894041652:bounce:30e9ca4b-0723-4078-86a5-0d1d2573d101**
 
+Note your Rails log should contain notification of the AWS bounce handler test:
+~~~
+Started POST "/aws_sns/bounce" for 72.21.217.160 at 2017-01-11 19:52:45 +0000
+Processing by SimpleMailController#bounce as HTML
+bounce callback from AWS with {"Type"=>"SubscriptionConfirmation", "MessageId"=>"8b9deebe-4b9c-459a-b7a7-356181f3de8e", "Token"=>"2336412f37fb687f5d51e6e241d59b68cca4990086f3344ccbf5c57b473072a814c41a3f14bc0c64fd2ef79d7c7d87dec966db746367e324cedec7738b69ba306794b258768ddfaa879f91b7501153b144c6933815d5fd313aeec73e8b41977aec3c0d1adda5787c4be9c471bded8af3", "TopicArn"=>"arn:aws:sns:us-east-1:294894041652:bounces", "Message"=>"You have chosen to subscribe to the topic arn:aws:sns:us-east-1:294894041652:bounces.\nTo confirm the subscription, visit the SubscribeURL included in this message.", "SubscribeURL"=>"https://sns.us-east-1.amazonaws.com/?Action=ConfirmSubscription&TopicArn=arn:aws:sns:us-east-1:294894041652:bounces&Token=2336412f37fb687f5d51e6e241d59b68cca4990086f3344ccbf5c57b473072a814c41a3f14bc0c64fd2ef79d7c7d87dec966db746367e324cedec7738b69ba306794b258768ddfaa879f91b7501153b144c6933815d5fd313aeec73e8b41977aec3c0d1adda5787c4be9c471bded8af3", "Timestamp"=>"2017-01-11T19:52:45.493Z", "SignatureVersion"=>"1", "Signature"=>"BdRcDd4PnNi/lzrzLVHi68fRmZ164FyUZ/9EnV7nwJmP3Ej8dbgT4gzvW7qRp0DP3wXuEm0S97twvbfbJ7UdOHL+HlSA4balL9s2irFDI1IxehxWZbRRa4IZ7Hzo8eRyy+Cv1KetBAgZFGikNCCe5ZS4F3vhGP5yjGydO0Jx5H7lIouK/B0h1Jdi1sqiCYLp8CofHWUSEVKUnbqqeuQHVViE8eICqVAJjKtr41kYvYTt2be45T12ni4H6qkLcT9JpfgmikU3l9/EfCjAWc3c4q9aYR0MfIwt40UPwSiJkBXmQS3oxREwQo9M+Iv/QkJLubOMvy4y3De5h/JzkalcHw==", "SigningCertURL"=>"https://sns.us-east-1.amazonaws.com/SimpleNotificationService-b95095beb82e8f6a046b3aafc7f4149a.pem"}
+AWS is requesting confirmation of the bounce handler URL
+Rendered text template (0.0ms)
+Completed 200 OK in 201ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+~~~
+
 ## Selecting the Simplified JSON Notification Format
 
-To get a simplified version of the AWS-SES bounce JSON string I (which is also the format I expect in SimpleMailController) I changed the raw type. You should do that as well by clicking on the Subscriptions link in the left panel, then clicking the checkbox of the bounce topic in the center panel, and, in the popup, click Raw Message Delivery True, and click the Set Subscription Attributes button.
+To get a simplified version of the AWS-SES bounce JSON string I (which is also the format I expect in SimpleMailController) I changed the raw type. You should do that as well by clicking on the Subscriptions link in the left panel, then clicking the checkbox of the bounce topic in the center panel, select `Edit subscription attributes` from the Actions drop-down and, in the popup, click Raw Message Delivery True, and click the Set Subscription Attributes button.
 
 ![Alt text](/public/images/sns_msg_format_raw.png?raw=true)
 
 ## Enabling Bounce Notifications
 
-Next you need to assign the newly created “bounce” SNS topic to your SES Verified Senders. From the AWS menu, select Services and click on SES. Then, on the left panel, click on Email Addresses under Verified Senders. You had previously entered an email address here but, this time, we need to specify that emails sent through the Verified Senders will have bounce processing enabled.
+Next you need to assign the newly created “bounce” SNS topic to your SES Verified Senders. From AWS SES [home page](https://console.aws.amazon.com/ses/home) left panel, click on Email Addresses under Verified Senders. You had previously entered an email address here but, this time, we need to specify that emails sent through the Verified Senders will have bounce processing enabled.
 
 ![Alt text](/public/images/ses_verify_email_addr.png?raw=true)
 
