@@ -30,7 +30,7 @@ And here’s the controller code:
 
 ```ruby
 class SimpleMailController < ApplicationController
-  skip_before_filter :verify_authenticity_token # so AWS callbacks are accepted
+  skip_before_action :verify_authenticity_token # so AWS callbacks are accepted
 
   def mail_it
     logger.info "mail_it called with #{params}"
